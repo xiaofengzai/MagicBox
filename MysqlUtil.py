@@ -7,7 +7,7 @@ class MysqlProcessor:
     __cursor=None
     def __init__(self):
         self.__cfg=cfu.readValues('conf.ini','mysql')
-        self.__db = pymysql.connect(self.__cfg["host"],self.__cfg["port"], self.__cfg["user"],self.__cfg["password"],self.__cfg["dbname"],charset='utf8' )
+        self.__db = pymysql.connect(host=self.__cfg["host"],port=int(self.__cfg["port"]),user= self.__cfg["user"],password=self.__cfg["password"],db=self.__cfg["dbname"],charset='utf8' )
         self.__cursor = self.__db.cursor()
 
     def __execute(self,script):
@@ -19,6 +19,7 @@ class MysqlProcessor:
 
     def update(self,script):
         self.__execute(script)
+        self.__db.commit()
 
     def findAll(self,script):
         self.__execute(script)
