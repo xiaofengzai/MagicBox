@@ -1,12 +1,13 @@
 import pymysql
-import ConfigUtil as cfu
+import ConfigReader as cr
 
 class MysqlProcessor:
     __cfg=None
     __db=None
     __cursor=None
     def __init__(self):
-        self.__cfg=cfu.readValues('conf.ini','mysql')
+        self.__cfg=cr.readValues('conf.ini','mysql')
+        print self.__cfg,'hah'
         self.__db = pymysql.connect(host=self.__cfg["host"],port=int(self.__cfg["port"]),user= self.__cfg["user"],password=self.__cfg["password"],db=self.__cfg["dbname"],charset='utf8' )
         self.__cursor = self.__db.cursor()
 
@@ -17,7 +18,7 @@ class MysqlProcessor:
         self.__execute(script)
         return self.__cursor.fetchone()
 
-    def update(self,script):
+    def excuet(self,script):
         self.__execute(script)
         self.__db.commit()
 

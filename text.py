@@ -1,4 +1,4 @@
-imoprt json
+import json
 
 def readText( file ):
   ff=open(file)
