@@ -3,6 +3,7 @@ import pandas as pd
 import sys
 
 def xlsx_to_csv_pd(source,target):
+    """ translate Excel to csv"""
     data_xls = pd.read_excel(source, index_col=0)
     data_xls.to_csv(target, encoding='utf-8')
 
