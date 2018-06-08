@@ -78,27 +78,35 @@ class Mongo:
         self.db.authenticate(self.__cfg["user"], self.__cfg["password"])
 
     def getCollections(self):
+        """ get all collections of documnets """
         return self.db.collection_names(include_system_collections=False)
 
     def findOne(self,collectionName):
+        """ get one documnet from a collection """
         return self.db[collectionName].find_one()
 
     def findByID(self,collectionName,id):
+        """ get one documnet from a collection by id """
         return self.db[collectionName].find_one({"_id":id})
 
     def findAll(self,collectionName,param):
+        """ get all documnet from a collection by josn param """
         return self.db[collectionName].find(param)
 
     def count(self,collectionName,param):
+        """ get  documnet count from a collection by josn param """
         return self.db[collectionName].find(param).count()
 
     def insertOne(self,collectionName,json):
+        """ insert a  documnet into a collection and then return id """
         return self.db[collectionName].insert_one(json).inserted_id
 
     def insertMany(self,collectionName,json):
+        """ insert  documnets into a collection and then return ids """
         return self.db[collectionName].insert_many(json).inserted_ids
 
     def find(self,collectionName,param,sorted):
+        """ find sorted documnets from a collection by josn param """
         return self.db[collectionName].find(param).sort(sorted)
 
     

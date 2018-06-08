@@ -12,6 +12,4 @@ def readTextToList( file ,seperator=','):
 def readTextToJSON( file):
   return json.loads(readText(file))
   
-  
-def difference(list1,list2):
-  return list(set(list1).difference(set(list2)))
+
