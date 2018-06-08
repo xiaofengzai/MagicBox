@@ -1,5 +1,6 @@
 import pymysql
 import pymssql
+import xlwt
 from pymongo import MongoClient
 import ConfigReader as cr
 
@@ -28,6 +29,22 @@ class BaseDb:
         """ query  record list """
         self.__execute(script)
         return self.__cursor.fetchall()
+
+    def exportExcel(self,script,outFileName):
+        # self.__cursor.scroll(0,mode='absolute')
+        results = self.findAll(script)
+        fields = self.__cursor.description
+        workbook = xlwt.Workbook()
+        sheet = workbook.add_sheet('sheet0',cell_overwrite_ok=True)
+        for field in range(0,len(fields)):
+            sheet.write(0,field,fields[field][0])
+        row = 1
+        col = 0
+        for row in range(1,len(results)+1):
+            for col in range(0,len(fields)):
+                sheet.write(row,col,u'%s'%results[row-1][col])
+        workbook.save(r'./{}.xlsx'.format(outFileName))
+
 
     def close(self):
         if self.__db != None:
