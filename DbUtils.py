@@ -5,8 +5,6 @@ from pymongo import MongoClient
 import ConfigReader as cr
 
 class BaseDb:
-    __db=None
-    __cursor=None
     def __init__(self,db):
         self.__db = db
         self.__cursor = self.__db.cursor()
@@ -31,6 +29,7 @@ class BaseDb:
         return self.__cursor.fetchall()
 
     def exportExcel(self,script,outFileName):
+        """ export excel"""
         # self.__cursor.scroll(0,mode='absolute')
         results = self.findAll(script)
         fields = self.__cursor.description
@@ -53,7 +52,6 @@ class BaseDb:
 
 class MySql(BaseDb):
     """ to connect mysql"""
-    __cfg=None
     def __init__(self):
         self.__cfg=cr.readValues('conf.ini','mysql')
         self.__db = pymysql.connect(host=self.__cfg["host"],port=int(self.__cfg["port"]),user= self.__cfg["user"],password=self.__cfg["password"],db=self.__cfg["dbname"],charset='utf8' )
@@ -62,7 +60,6 @@ class MySql(BaseDb):
 
 class MSSQL(BaseDb):
     """ to connect MSSQL"""
-    __cfg=None
     def __init__(self):
         self.__cfg=cr.readValues('conf.ini','sqlserver')
         self.__db = pymssql.connect(self.__cfg["host"],self.__cfg["user"],self.__cfg["password"],self.__cfg["dbname"] )
