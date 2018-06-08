@@ -1,5 +1,6 @@
 import pymysql
 import pymssql
+from pymongo import MongoClient
 import ConfigReader as cr
 
 class BaseDb:
@@ -28,7 +29,7 @@ class BaseDb:
         self.__execute(script)
         return self.__cursor.fetchall()
 
-    def close():
+    def close(self):
         if self.__db != None:
             self.__db.close()
     
@@ -49,3 +50,41 @@ class MSSQL(BaseDb):
         self.__cfg=cr.readValues('conf.ini','sqlserver')
         self.__db = pymssql.connect(self.__cfg["host"],self.__cfg["user"],self.__cfg["password"],self.__cfg["dbname"] )
         BaseDb.__init__(self,self.__db)
+
+
+class Mongo:
+    """ to operate mongodb """
+    def __init__(self,dbname=None):
+        self.__cfg=cr.readValues('conf.ini','mongo')
+        client = MongoClient(self.__cfg["host"], int(self.__cfg["port"]))
+        if dbname==None:
+            self.db = client[self.__cfg["dbname"]]
+        else:
+            self.db=client[dbname]
+        self.db.authenticate(self.__cfg["user"], self.__cfg["password"])
+
+    def getCollections(self):
+        return self.db.collection_names(include_system_collections=False)
+
+    def findOne(self,collectionName):
+        return self.db[collectionName].find_one()
+
+    def findByID(self,collectionName,id):
+        return self.db[collectionName].find_one({"_id":id})
+
+    def findAll(self,collectionName,param):
+        return self.db[collectionName].find(param)
+
+    def count(self,collectionName,param):
+        return self.db[collectionName].find(param).count()
+
+    def insertOne(self,collectionName,json):
+        return self.db[collectionName].insert_one(json).inserted_id
+
+    def insertMany(self,collectionName,json):
+        return self.db[collectionName].insert_many(json).inserted_ids
+
+    def find(self,collectionName,param,sorted):
+        return self.db[collectionName].find(param).sort(sorted)
+
+    

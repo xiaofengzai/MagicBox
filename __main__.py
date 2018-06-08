@@ -3,6 +3,7 @@ import collection
 import text as tt
 from DbUtils import MySql as Mp
 from DbUtils import MSSQL as Ms
+from DbUtils import Mongo as Mg
 
 
 def test():
@@ -15,7 +16,7 @@ def readFile():
 
 def insert():
     mp = Mp()
-    mp.excuet("insert into user(`name`,`age`) values('wengdd',233);")
+    mp.excuete("insert into user(`name`,`age`) values('wengdd',233);")
 
 
 def query():
@@ -24,7 +25,10 @@ def query():
     for i in result:
         print i[0], i[1]
 
+def mongo():
+    mg=Mg()
+    print mg.getCollections()
 
 if __name__ == '__main__':
 
-    query()
+    mongo()
